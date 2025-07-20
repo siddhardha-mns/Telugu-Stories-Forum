@@ -676,8 +676,7 @@ class TeluguStoriesApp:
             unsafe_allow_html=True
         )
         
-        # Story metadata with views
-        st.markdown(# Story metadata with views
+# Story metadata with views
         meta_info = f"""
         <div class="story-meta">
             <strong>రచయిత:</strong> {story["author"]} • 
