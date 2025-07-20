@@ -51,3 +51,33 @@ st.header("తాజా కథలు")
 
 for i, story in enumerate(st.session_state.stories):
     display_story_card(story, i)
+
+
+st.title("📖 తెలుగు కథలు")
+st.markdown("పంచుకోండి, చదవండి, చర్చించండి.")
+
+# --- Submit Story Dialog ---
+if "show_form" not in st.session_state:
+    st.session_state.show_form = False
+
+if st.button("✍️ కొత్త కథను జోడించండి"):
+    st.session_state.show_form = True
+
+if st.session_state.show_form:
+    with st.dialog("మీ కథను పంచుకోండి", on_dismiss=lambda: setattr(st.session_state, 'show_form', False)):
+        with st.form("story_form"):
+            title = st.text_input("శీర్షిక")
+            author = st.text_input("రచయిత పేరు")
+            content = st.text_area("మీ కథ / రచన", height=250)
+            submitted = st.form_submit_button("ప్రచురించండి")
+            if submitted:
+                new_story = {
+                    "title": title, "author": author, "timestamp": "ఇప్పుడే",
+                    "category": "కథ", "excerpt": content[:150] + "...",
+                    "upvotes": 0, "comments": 0
+                }
+                st.session_state.stories.insert(0, new_story)
+                st.session_state.show_form = False
+                st.success("మీ కథ విజయవంతంగా ప్రచురించబడింది!")
+                st.rerun()
+
