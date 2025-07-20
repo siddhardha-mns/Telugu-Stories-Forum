@@ -34,5 +34,20 @@ st.markdown("పంచుకోండి, చదవండి, చర్చిం
 st.markdown("---")
 st.header("తాజా కథలు")
 
-# We will render the stories in a later commit
-st.info("Story rendering logic coming soon...")
+# --- Helper Function to Display a Story Card ---
+def display_story_card(story, index):
+    with st.container(border=True):
+        st.subheader(story['title'])
+        st.caption(f'రచయిత: {story["author"]} • {story["timestamp"]}')
+        st.write(story['excerpt'])
+        actions = st.columns(4)
+        actions[0].button(f"👍 {story['upvotes']}", key=f"up_{index}")
+        actions[1].button(f"💬 {story['comments']}", key=f"comm_{index}")
+
+st.title("📖 తెలుగు కథలు")
+st.markdown("పంచుకోండి, చదవండి, చర్చించండి.")
+st.markdown("---")
+st.header("తాజా కథలు")
+
+for i, story in enumerate(st.session_state.stories):
+    display_story_card(story, i)
