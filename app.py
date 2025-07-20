@@ -1,26 +1,93 @@
- import streamlit as st
+import streamlit as st
 
-
-def load_css():
-    st.markdown("""
-        <style>
-        /* All the CSS from the previous answer goes here */
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Telugu:wght@400;700&family=Poppins:wght@400;500;700&display=swap');
-        html, body, [class*="st-"] { font-family: 'Noto Sans Telugu', sans-serif; }
-        h1, h2, h3 { font-family: 'Poppins', sans-serif; }
-        .st-emotion-cache-1v0mbdj > button { border-color: #E67E22; color: #E67E22; } /* Example */
-        </style>
-    """, unsafe_allow_html=True)
-
-
-load_css()
+# --- Page Configuration (MUST be the first Streamlit command) ---
 st.set_page_config(
     page_title="తెలుగు కథలు",
     page_icon="📖",
-    layout="centered"
+    layout="centered",
+    initial_sidebar_state="auto",
 )
 
+# --- Custom CSS for Styling ---
+# This function injects custom CSS to style the app.
+def load_css():
+    st.markdown("""
+        <style>
+            /* Import Google Fonts for Telugu and UI elements */
+            @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Telugu:wght@400;700&family=Poppins:wght@400;500;700&display=swap');
+            
+            /* --- Global Style Variables --- */
+            :root {
+                --primary-color: #E67E22;
+                --secondary-color: #34495E;
+                --background-color: #F8F9FA;
+                --text-color: #2C3E50;
+                --meta-text-color: #7F8C8D;
+            }
+
+            /* --- Base Font Styles --- */
+            html, body, [class*="st-"] {
+                font-family: 'Noto Sans Telugu', sans-serif;
+                color: var(--text-color);
+            }
+            
+            /* --- Title and Header Styles --- */
+            h1 {
+                font-family: 'Noto Sans Telugu', sans-serif;
+                font-weight: 700;
+                color: var(--secondary-color) !important;
+            }
+
+            h2, h3 {
+                font-family: 'Poppins', sans-serif;
+                font-weight: 700;
+                color: var(--secondary-color) !important;
+            }
+
+            /* --- Custom Button for 'Add Story' --- */
+            .stButton > button {
+                border-color: var(--primary-color);
+                color: var(--primary-color);
+                border-radius: 20px;
+                transition: all 0.3s;
+                font-weight: bold;
+            }
+            .stButton > button:hover {
+                background-color: var(--primary-color);
+                color: white;
+                border-color: var(--primary-color);
+                transform: scale(1.05);
+            }
+            
+            /* --- Story Card Customizations --- */
+            .story-card {
+                background-color: #FFFFFF;
+                border-radius: 10px;
+                padding: 20px;
+                margin-bottom: 20px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.07);
+                border-left: 5px solid var(--primary-color);
+            }
+
+            .story-category {
+                background-color: rgba(230, 126, 34, 0.1);
+                color: var(--primary-color);
+                padding: 3px 10px;
+                border-radius: 15px;
+                font-size: 0.8rem;
+                font-weight: bold;
+                display: inline-block;
+                margin-bottom: 10px;
+                font-family: 'Poppins', sans-serif;
+            }
+        </style>
+    """, unsafe_allow_html=True)
+
+# Apply the custom CSS
+load_css()
+
 # --- Initial Data and Session State ---
+# This dictionary will hold our stories. In a real app, this would come from a database.
 if 'stories' not in st.session_state:
     st.session_state.stories = [
         {
@@ -43,34 +110,33 @@ if 'stories' not in st.session_state:
         }
     ]
 
-st.title("📖 తెలుగు కథలు")
-st.markdown("పంచుకోండి, చదవండి, చర్చించండి.")
-st.markdown("---")
-st.header("తాజా కథలు")
-
 # --- Helper Function to Display a Story Card ---
+# This function is defined once and used in the main feed.
 def display_story_card(story, index):
-    with st.container(border=True):
-        st.subheader(story['title'])
-        st.caption(f'రచయిత: {story["author"]} • {story["timestamp"]}')
-        st.write(story['excerpt'])
-        actions = st.columns(4)
-        actions[0].button(f"👍 {story['upvotes']}", key=f"up_{index}")
-        actions[1].button(f"💬 {story['comments']}", key=f"comm_{index}")
+    # Using markdown to inject our custom class for styling
+    st.markdown('<div class="story-card">', unsafe_allow_html=True)
+    
+    st.markdown(f'<div class="story-category">{story["category"]}</div>', unsafe_allow_html=True)
+    st.subheader(story['title'])
+    st.caption(f'రచయిత: {story["author"]} • {story["timestamp"]}')
+    st.write(story['excerpt'])
 
+    # Action buttons
+    actions = st.columns([1, 1, 2, 2])
+    actions[0].button(f"👍 {story['upvotes']}", key=f"up_{index}", use_container_width=True)
+    actions[1].button("👎", key=f"down_{index}", use_container_width=True)
+    actions[2].button(f"💬 {story['comments']} వ్యాఖ్యలు", key=f"comm_{index}", use_container_width=True)
+
+    st.markdown('</div>', unsafe_allow_html=True)
+
+
+# --- Main App UI ---
+
+# 1. Header Section
 st.title("📖 తెలుగు కథలు")
 st.markdown("పంచుకోండి, చదవండి, చర్చించండి.")
-st.markdown("---")
-st.header("తాజా కథలు")
 
-for i, story in enumerate(st.session_state.stories):
-    display_story_card(story, i)
-
-
-st.title("📖 తెలుగు కథలు")
-st.markdown("పంచుకోండి, చదవండి, చర్చించండి.")
-
-# --- Submit Story Dialog ---
+# 2. Submit Story Dialog Logic
 if "show_form" not in st.session_state:
     st.session_state.show_form = False
 
@@ -80,33 +146,54 @@ if st.button("✍️ కొత్త కథను జోడించండి"):
 if st.session_state.show_form:
     with st.dialog("మీ కథను పంచుకోండి", on_dismiss=lambda: setattr(st.session_state, 'show_form', False)):
         with st.form("story_form"):
-            title = st.text_input("శీర్షిక")
-            author = st.text_input("రచయిత పేరు")
-            content = st.text_area("మీ కథ / రచన", height=250)
+            title = st.text_input("శీర్షిక", placeholder="మీ కథ శీర్షిక")
+            category = st.selectbox("విభాగం", ["కథ", "చరిత్ర", "సంస్కృతి", "కవిత", "విజ్ఞానం"])
+            author = st.text_input("రచయిత పేరు", placeholder="మీ పేరు")
+            content = st.text_area("మీ కథ / రచన", height=250, placeholder="ఇక్కడ మీ రచనను టైప్ చేయండి...")
+            
             submitted = st.form_submit_button("ప్రచురించండి")
-            if submitted:
-                new_story = {
-                    "title": title, "author": author, "timestamp": "ఇప్పుడే",
-                    "category": "కథ", "excerpt": content[:150] + "...",
-                    "upvotes": 0, "comments": 0
-                }
-                st.session_state.stories.insert(0, new_story)
-                st.session_state.show_form = False
-                st.success("మీ కథ విజయవంతంగా ప్రచురించబడింది!")
-                st.rerun()
 
+            if submitted:
+                if not title or not content or not author:
+                    st.error("దయచేసి అన్ని వివరాలు నింపండి.")
+                else:
+                    new_story = {
+                        "title": title,
+                        "author": author,
+                        "timestamp": "ఇప్పుడే",
+                        "category": category,
+                        "excerpt": content[:150] + "...",
+                        "upvotes": 0,
+                        "comments": 0
+                    }
+                    st.session_state.stories.insert(0, new_story)
+                    st.session_state.show_form = False
+                    st.success("మీ కథ విజయవంతంగా ప్రచురించబడింది!")
+                    st.rerun()
+
+# 3. Main Layout with Feed and Sidebar
 st.markdown("---")
 feed_col, sidebar_col = st.columns([3, 1.2])
 
 with feed_col:
     st.header("తాజా కథలు")
-    for i, story in enumerate(st.session_state.stories):
-        display_story_card(story, i)
+    if not st.session_state.stories:
+        st.info("ప్రస్తుతానికి కథలు ఏమీ లేవు. మీరే మొదటి కథను జోడించండి!")
+    else:
+        # Loop to display all stories
+        for i, story in enumerate(st.session_state.stories):
+            display_story_card(story, i)
 
 with sidebar_col:
     with st.container(border=True):
         st.header("విభాగాలు")
-        st.write("📜 చరిత్ర")
-        st.write("📖 కథలు & కవితలు")
-        st.write("🎭 సంస్కృతి")
-    st.info("వేదిక నియమాలు: ఒకరినొకరు గౌరవించుకోండి.", icon="⚖️")
+        st.page_link("app.py", label="📜 చరిత్ర", icon="📜")
+        st.page_link("app.py", label="📖 కథలు & కవితలు", icon="📖")
+        st.page_link("app.py", label="🎭 సంస్కృతి", icon="🎭")
+        st.page_link("app.py", label="🧠 విజ్ఞానం", icon="🧠")
+    
+    st.info("**వేదిక నియమాలు:** దయచేసి ఒకరినొకరు గౌరవించుకోండి. ఇది మన తెలుగు భాషా సంస్కృతుల వేదిక.", icon="⚖️")
+
+# 4. Footer
+st.markdown("---")
+st.markdown("<div style='text-align: center; color: var(--meta-text-color);'>&copy; 2025 తెలుగు కథలు. అన్ని హక్కులు ప్రత్యేకించబడినవి.</div>", unsafe_allow_html=True)
