@@ -81,3 +81,19 @@ if st.session_state.show_form:
                 st.success("మీ కథ విజయవంతంగా ప్రచురించబడింది!")
                 st.rerun()
 
+
+st.markdown("---")
+feed_col, sidebar_col = st.columns([3, 1.2])
+
+with feed_col:
+    st.header("తాజా కథలు")
+    for i, story in enumerate(st.session_state.stories):
+        display_story_card(story, i)
+
+with sidebar_col:
+    with st.container(border=True):
+        st.header("విభాగాలు")
+        st.write("📜 చరిత్ర")
+        st.write("📖 కథలు & కవితలు")
+        st.write("🎭 సంస్కృతి")
+    st.info("వేదిక నియమాలు: ఒకరినొకరు గౌరవించుకోండి.", icon="⚖️")
