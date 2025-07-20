@@ -1,5 +1,19 @@
-import streamlit as st
+ import streamlit as st
 
+
+def load_css():
+    st.markdown("""
+        <style>
+        /* All the CSS from the previous answer goes here */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Telugu:wght@400;700&family=Poppins:wght@400;500;700&display=swap');
+        html, body, [class*="st-"] { font-family: 'Noto Sans Telugu', sans-serif; }
+        h1, h2, h3 { font-family: 'Poppins', sans-serif; }
+        .st-emotion-cache-1v0mbdj > button { border-color: #E67E22; color: #E67E22; } /* Example */
+        </style>
+    """, unsafe_allow_html=True)
+
+
+load_css()
 st.set_page_config(
     page_title="తెలుగు కథలు",
     page_icon="📖",
