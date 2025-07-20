@@ -81,7 +81,6 @@ if st.session_state.show_form:
                 st.success("మీ కథ విజయవంతంగా ప్రచురించబడింది!")
                 st.rerun()
 
-
 st.markdown("---")
 feed_col, sidebar_col = st.columns([3, 1.2])
 
