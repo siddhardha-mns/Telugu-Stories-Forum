@@ -1,0 +1,43 @@
+# CHANGELOG
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/).
+
+## [Unreleased]
+
+- (Place upcoming features and fixes here!)
+
+## [1.1.0] - 2025-07-26
+
+### Added
+- Expanded and updated the README.md to comprehensively cover all current features and usage instructions. [06878a0]
+
+### Improved
+- Enhanced UI elements for a better, more user-friendly experience. [6334772]
+
+### Fixed
+- Bug fixes and updates in app.py to improve stability and function. [55984fd]
+
+## [1.0.0] - 2025-07-25
+
+### Added
+- Implemented a complete Telugu stories platform with interactive features:
+    - Story card rendering with upvote and downvote functionality.
+    - Full story view and social sharing capabilities.
+    - Comprehensive form validation with real-time character counters.
+    - Statistics dashboard with platform usage metrics.
+    - Advanced search and filtering system.
+    - Multi-page navigation system: home, write, stats, about.
+    - Community guidelines page.
+    - Fully responsive design for mobile and desktop.
+    - Error handling and improved user interaction tracking. [e6cee6a]
+
+### Changed
+- Complete refactor: Overhauled the Telugu stories app codebase with OOP design.
+    - Enhanced UI with modern CSS, animations, and responsiveness.
+    - Refactored for better maintainability and code clarity.
+    - Improved navigation, statistics tracking, error handling, and filtering.
+    - Comprehensive form validation added.
+    - Implemented upvote/downvote and sorting features. [bcb0c09]
+
